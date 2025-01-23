@@ -107,7 +107,7 @@ class FlashingImageApp:
 
 #Start script Here
 if __name__ == "__main__":
-    image_folder = r"C:\Users\thegr\OneDrive\Pictures\ImageFolderPath"  # Replace with the path to your image folder
+    image_folder = r"C:\Users\thegr\PycharmProjects\Newphython\ImageFolder"  # Replace with the path to your image folder
     root = tk.Tk()
     app = FlashingImageApp(root, image_folder)
     root.mainloop()
