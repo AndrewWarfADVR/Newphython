@@ -49,6 +49,10 @@ class FlashingImageApp:
         self.total_images = 100
         self.timer_id = None
         self.flash_image()  # Start flashing images
+        # Keyboard function  ---
+        # Bind keyboard buttons (4 for Yes, 6 for No)
+        self.root.bind('4', self.yes_button_clicked_from_key)
+        self.root.bind('6', self.no_button_clicked_from_key)
 
     def get_random_image(self, folder):
         """Selects a random image from the folder."""
@@ -94,6 +98,18 @@ class FlashingImageApp:
         self.check_answer('No')
         self.hide_image()
 
+    # Script 4 KEY = ANSWER YES --- 6 Key = NO
+
+    def yes_button_clicked_from_key(self, event=None):
+        """Handles 'Yes' key press (key 4)."""
+        self.check_answer('Yes')
+        self.hide_image()
+
+    def no_button_clicked_from_key(self, event=None):
+        """Handles 'No' key press (key 6)."""
+        self.check_answer('No')
+        self.hide_image()
+
     def check_answer(self, user_answer):
         """Compares the user's answer to the correct answer and updates the score."""
         if user_answer == self.correct_answer:
@@ -132,10 +148,10 @@ class FlashingImageApp:
         self.flash_image()
 
 
-# Start script ---NOTE! FOR USER MAKE SURE TO CHOOSE A FILE PATH FOR ALIVE AND NOT ALIVE FOLDER MAKE SURE THESE FOLDERS are IN PARENT FOLDER EXSAMPLE Parent folder in this case is ("ImageFolder") which has CHILD folders which are ("\alive_images") ("\not_alive_images")
+# Start script ---NOTE! FOR USER MAKE SURE TO CHOOSE A FILE PATH FOR ALIVE AND NOT ALIVE FOLDER MAKE SURE THESE FOLDERS are IN PARENT FOLDER EXAMPLE Parent folder in this case is ("ImageFolder") which has CHILD folders which are ("\alive_images") ("\not_alive_images")
 if __name__ == "__main__":
-    alive_folder = r"C:\Users\thegr\PycharmProjects\Newphython\ImageFolder\alive_images"
-    not_alive_folder = r"C:\Users\thegr\PycharmProjects\Newphython\ImageFolder\not_alive_images"
+    alive_folder = r"C:\Users\kakee\ImageFolder\alive_images"
+    not_alive_folder = r"C:\Users\kakee\ImageFolder\not_alive_images"
     root = tk.Tk()
     app = FlashingImageApp(root, alive_folder, not_alive_folder)
     root.mainloop()
