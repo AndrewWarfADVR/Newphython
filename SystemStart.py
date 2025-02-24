@@ -46,7 +46,7 @@ class FlashingImageApp:
 
         self.image_count = 0
         self.score = 0
-        self.total_images = 100
+        self.total_images = 500   #<----____THIS WILL CHANGE THE LENGTH OF THE APPLICATION RUN TIME BY ADDING A HIGHER NUMBER WILL EXTEND THE RUN TIME..-----
         self.timer_id = None
         self.flash_image()  # Start flashing images
         # Keyboard function  ---
@@ -148,7 +148,7 @@ class FlashingImageApp:
         self.flash_image()
 
 
-# Start script ---NOTE! FOR USER MAKE SURE TO CHOOSE A FILE PATH FOR ALIVE AND NOT ALIVE FOLDER MAKE SURE THESE FOLDERS are IN PARENT FOLDER EXAMPLE Parent folder in this case is ("ImageFolder") which has CHILD folders which are ("\alive_images") ("\not_alive_images")
+# Start script ---NOTE! FOR USER MAKE SURE TO CHOOSE A FILE PATH FOR ALIVE AND NOT ALIVE FOLDER MAKE SURE THESE FOLDERS are IN PARENT FOLDER EXAMPLE Parent folder in this case is ("ImageFolder") which has CHILD folders which are ("\alive_images") ("\not_alive_images") THE PARENT FOLDER NAME DOES NOT MATTER HOWEVER THE CHILD FOLDER HAS TO BE ("\alive_images") ("\not_alive_images")
 if __name__ == "__main__":
     alive_folder = r"C:\Users\kakee\ImageFolder\alive_images"
     not_alive_folder = r"C:\Users\kakee\ImageFolder\not_alive_images"
