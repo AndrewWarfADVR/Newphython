@@ -3,6 +3,7 @@ import random
 import tkinter as tk
 from tkinter import Button, Label
 from PIL import Image, ImageTk
+import time
 
 
 class FlashingImageApp:
@@ -10,7 +11,7 @@ class FlashingImageApp:
         self.root = root
         self.root.title("Flashing Image Game")
         self.root.configure(bg='#2C3E50')  # Dark Blue background
-        self.root.geometry('600x600')  # Window size
+        self.root.geometry('600x650')  # Window size
 
         self.alive_folder = alive_folder
         self.not_alive_folder = not_alive_folder
@@ -24,12 +25,23 @@ class FlashingImageApp:
         if not self.alive_images and not self.not_alive_images:
             raise ValueError("No images found in the provided folders!")
 
+        # Timer variables
+        self.game_duration = 600  # 10 minutes (600 seconds)
+        self.start_time = time.time()
+
+        # Timer display
+        self.timer_label = Label(root, text="Time Left: 10:00", font=('Arial', 16, 'bold'), fg='#F1C40F', bg='#2C3E50')
+        self.timer_label.pack(pady=10)
+
+        # Image display
         self.image_label = Label(root, bg='#2C3E50')
         self.image_label.pack(pady=20)
 
+        # Question Label
         self.label = Label(root, text="Is the image alive?", font=('Arial', 18, 'bold'), fg='#ECF0F1', bg='#2C3E50')
         self.label.pack(pady=20)
 
+        # Yes & No Buttons
         self.yes_button = Button(root, text="Yes", font=('Arial', 14), bg='#27AE60', fg='white', relief='raised', bd=5,
                                  command=self.yes_button_clicked)
         self.yes_button.pack(side='left', padx=40, pady=20)
@@ -44,15 +56,26 @@ class FlashingImageApp:
         self.end_game_button = Button(root, text="End Game", font=('Arial', 14), bg='#E74C3C', fg='white',
                                       relief='raised', bd=5, command=self.root.quit)
 
+        # Game variables
         self.image_count = 0
         self.score = 0
-        self.total_images = 500   #<----____THIS WILL CHANGE THE LENGTH OF THE APPLICATION RUN TIME BY ADDING A HIGHER NUMBER WILL EXTEND THE RUN TIME..-----
         self.timer_id = None
+
+        self.update_timer()  # Start countdown timer
         self.flash_image()  # Start flashing images
-        # Keyboard function  ---
-        # Bind keyboard buttons (4 for Yes, 6 for No)
-        self.root.bind('4', self.yes_button_clicked_from_key)
-        self.root.bind('6', self.no_button_clicked_from_key)
+
+    def update_timer(self):
+        """Updates the countdown timer every second."""
+        elapsed_time = int(time.time() - self.start_time)
+        remaining_time = self.game_duration - elapsed_time
+
+        if remaining_time <= 0:
+            self.end_game()
+        else:
+            minutes = remaining_time // 60
+            seconds = remaining_time % 60
+            self.timer_label.config(text=f"Time Left: {minutes:02}:{seconds:02}")
+            self.root.after(1000, self.update_timer)  # Update timer every second
 
     def get_random_image(self, folder):
         """Selects a random image from the folder."""
@@ -63,7 +86,7 @@ class FlashingImageApp:
 
     def flash_image(self):
         """Flashes a random image and resets the timer."""
-        if self.image_count >= self.total_images:
+        if time.time() - self.start_time >= self.game_duration:
             self.end_game()
             return
 
@@ -98,18 +121,6 @@ class FlashingImageApp:
         self.check_answer('No')
         self.hide_image()
 
-    # Script 4 KEY = ANSWER YES --- 6 Key = NO
-
-    def yes_button_clicked_from_key(self, event=None):
-        """Handles 'Yes' key press (key 4)."""
-        self.check_answer('Yes')
-        self.hide_image()
-
-    def no_button_clicked_from_key(self, event=None):
-        """Handles 'No' key press (key 6)."""
-        self.check_answer('No')
-        self.hide_image()
-
     def check_answer(self, user_answer):
         """Compares the user's answer to the correct answer and updates the score."""
         if user_answer == self.correct_answer:
@@ -117,7 +128,7 @@ class FlashingImageApp:
 
     def end_game(self):
         """Displays the final score and shows Play Again and End Game buttons."""
-        accuracy_percentage = (self.score / self.total_images) * 100  # Calculate percentage
+        accuracy_percentage = (self.score / max(1, self.image_count)) * 100  # Avoid division by zero
         final_score_text = f"🎉 Congratulations! 🎉\nYour final score: {accuracy_percentage:.2f}%"
 
         # Display final score
@@ -136,6 +147,7 @@ class FlashingImageApp:
         """Resets the game and starts over."""
         self.image_count = 0
         self.score = 0
+        self.start_time = time.time()  # Reset timer
 
         # Hide Play Again and End Game buttons
         self.play_again_button.pack_forget()
@@ -144,14 +156,19 @@ class FlashingImageApp:
         # Reset label text
         self.label.config(text="Is the image alive?", font=('Arial', 18, 'bold'), fg='#ECF0F1')
 
-        # Restart image flashing
+        # Restart timer and image flashing
+        self.update_timer()
         self.flash_image()
 
 
-# Start script ---NOTE! FOR USER MAKE SURE TO CHOOSE A FILE PATH FOR ALIVE AND NOT ALIVE FOLDER MAKE SURE THESE FOLDERS are IN PARENT FOLDER EXAMPLE Parent folder in this case is ("ImageFolder") which has CHILD folders which are ("\alive_images") ("\not_alive_images") THE PARENT FOLDER NAME DOES NOT MATTER HOWEVER THE CHILD FOLDER HAS TO BE ("\alive_images") ("\not_alive_images")
+# Start script---- NOTE-- THE PARENT FOLDER NAME DOES NOT MATTER HOWEVER THE CHILD FOLDER HAS TO BE ("\alive_images") ("\not_alive_images") -------
+#
+#     Line 153 EXAMPLE: alive_folder = r"C:\YOUR\FILEPATH\ImageFolder\alive_images"
+#     -Line 154 EXAMPLE: not_alive_folder = r"C:\YOUR\FILEPATH\ImageFolder\not_alive_images"
+
 if __name__ == "__main__":
-    alive_folder = r"C:\Users\kakee\ImageFolder\alive_images"
-    not_alive_folder = r"C:\Users\kakee\ImageFolder\not_alive_images"
+    alive_folder = r"C:\Users\thegr\PycharmProjects\Newphython\ImageFolder\alive_images"
+    not_alive_folder = r"C:\Users\thegr\PycharmProjects\Newphython\ImageFolder\not_alive_images"
     root = tk.Tk()
     app = FlashingImageApp(root, alive_folder, not_alive_folder)
     root.mainloop()
